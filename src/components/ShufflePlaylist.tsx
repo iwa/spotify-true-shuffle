@@ -43,8 +43,8 @@ const ShufflePlaylist = () => {
   };
 
   const addTracksToQueue = async (trackUris: string[], accessToken: string) => {
-    const response = await fetch("https://api.spotify.com/v1/me/player/queue", {
-      method: "POST",
+    const response = await fetch("https://api.spotify.com/v1/me/player/play", {
+      method: "PUT",
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
