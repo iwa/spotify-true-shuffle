@@ -95,7 +95,7 @@ const ShufflePlaylist = () => {
   return (
     <div>
       {session ? (
-        <>
+        <div className="flex flex-col gap-4">
           <p className="text-white">Welcome {session?.user.name}!</p>
           <select
             value={selectedPlaylistId}
@@ -107,8 +107,8 @@ const ShufflePlaylist = () => {
               </option>
             ))}
           </select>
-          <button onClick={handlePlayPlaylist}>Play Playlist</button>;
-        </>
+          <button className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20" onClick={handlePlayPlaylist}>Shuffle!</button>;
+        </div>
       ) : (
         ""
       )}
