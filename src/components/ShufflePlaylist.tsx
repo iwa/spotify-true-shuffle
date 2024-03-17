@@ -1,10 +1,16 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
 import { signIn, signOut, useSession } from "next-auth/react";
 import useFetchPlaylists from "./useFetchPlaylists";
 import { useState } from "react";
 
 const ShufflePlaylist = () => {
   const { data: session } = useSession();
-  const { playlists, loading } = useFetchPlaylists(session?.accessToken || "");
+  const { playlists } = useFetchPlaylists(session?.accessToken ?? "");
 
   const [selectedPlaylistId, setSelectedPlaylistId] = useState("");
 
@@ -14,7 +20,7 @@ const ShufflePlaylist = () => {
   ) => {
     let tracks: string[] = [];
     let offset = 0;
-    let limit = 50; // Maximum limit per request
+    const limit = 50; // Maximum limit per request
     let totalTracks = 0;
 
     do {

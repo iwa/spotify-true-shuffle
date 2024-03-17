@@ -1,6 +1,4 @@
-import { getToken } from "next-auth/jwt";
 import Head from "next/head";
-import Link from "next/link";
 
 import ShufflePlaylist from '~/components/ShufflePlaylist';
 

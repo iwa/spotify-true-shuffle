@@ -6,8 +6,6 @@ import {
 } from "next-auth";
 import SpotifyProvider from "next-auth/providers/spotify";
 
-import { env } from "~/env";
-
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
  * object and keep type safety.
@@ -29,13 +27,13 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
     callbacks: {
-        jwt({ token, account, session }) {
+        jwt({ token, account }) {
             if (account) {
                 token = Object.assign({}, token, { access_token: account.access_token });
             }
             return token;
         },
-        session: ({ session, token, user }) => ({
+        session: ({ session, token }) => ({
             ...session,
             user: {
                 ...session.user,
