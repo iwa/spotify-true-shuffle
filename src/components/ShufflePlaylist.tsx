@@ -57,6 +57,15 @@ const ShufflePlaylist = () => {
     }
   };
 
+  // Fisher-Yates shuffle algorithm
+  function shuffleArray(array: string[]): string[] {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j]!, array[i]!];
+    }
+    return array;
+  }
+
   const handlePlayPlaylist = async () => {
     if (!selectedPlaylistId || !session?.accessToken) {
       alert("Please select a playlist and ensure you are signed in.");
@@ -69,7 +78,11 @@ const ShufflePlaylist = () => {
         session.accessToken,
       );
 
-      const trackUris = allTracks.filter((uri: any) => uri.startsWith("spotify:track:"));
+      let trackUris = allTracks.filter((uri: any) =>
+        uri.startsWith("spotify:track:"),
+      );
+
+      trackUris = shuffleArray(trackUris);
 
       await addTracksToQueue(trackUris, session.accessToken);
       alert("Tracks added to the queue!");
