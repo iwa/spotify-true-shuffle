@@ -64,10 +64,13 @@ const ShufflePlaylist = () => {
     }
 
     try {
-      const trackUris = await fetchPlaylistTracks(
+      const allTracks = await fetchPlaylistTracks(
         selectedPlaylistId,
         session.accessToken,
       );
+
+      const trackUris = allTracks.filter((uri: any) => uri.startsWith("spotify:track:"));
+
       await addTracksToQueue(trackUris, session.accessToken);
       alert("Tracks added to the queue!");
     } catch (error) {

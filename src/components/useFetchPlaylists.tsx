@@ -16,7 +16,6 @@ const useFetchPlaylists = (accessToken: string) => {
           },
         );
         const data = await response.json();
-        console.log(data.items);
         setPlaylists(data.items);
       } catch (error) {
         console.error("Failed to fetch playlists:", error);
