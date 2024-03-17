@@ -1,10 +1,10 @@
 import { type GetServerSidePropsContext } from "next";
 import {
-  getServerSession,
-  type DefaultSession,
-  type NextAuthOptions,
+    getServerSession,
+    type DefaultSession,
+    type NextAuthOptions,
 } from "next-auth";
-import DiscordProvider from "next-auth/providers/discord";
+import SpotifyProvider from "next-auth/providers/spotify";
 
 import { env } from "~/env";
 
@@ -15,18 +15,11 @@ import { env } from "~/env";
  * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
  */
 declare module "next-auth" {
-  interface Session extends DefaultSession {
-    user: DefaultSession["user"] & {
-      id: string;
-      // ...other properties
-      // role: UserRole;
-    };
-  }
-
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
+    interface Session extends DefaultSession {
+        user: DefaultSession["user"] & {
+            id: string;
+        };
+    }
 }
 
 /**
@@ -35,30 +28,29 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  */
 export const authOptions: NextAuthOptions = {
-  callbacks: {
-    session: ({ session, token }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: token.sub,
-      },
-    }),
-  },
-  providers: [
-    DiscordProvider({
-      clientId: env.DISCORD_CLIENT_ID,
-      clientSecret: env.DISCORD_CLIENT_SECRET,
-    }),
-    /**
-     * ...add more providers here.
-     *
-     * Most other providers require a bit more work than the Discord provider. For example, the
-     * GitHub provider requires you to add the `refresh_token_expires_in` field to the Account
-     * model. Refer to the NextAuth.js docs for the provider you want to use. Example:
-     *
-     * @see https://next-auth.js.org/providers/github
-     */
-  ],
+    callbacks: {
+        jwt({ token, account, session }) {
+            if (account) {
+                token = Object.assign({}, token, { access_token: account.access_token });
+            }
+            return token;
+        },
+        session: ({ session, token, user }) => ({
+            ...session,
+            user: {
+                ...session.user,
+                id: token.sub,
+            },
+            accessToken: token.access_token,
+        }),
+    },
+    providers: [
+        SpotifyProvider({
+            clientId: process.env.SPOTIFY_CLIENT_ID,
+            clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+            authorization: 'https://accounts.spotify.com/authorize?scope=playlist-read-private&playlist-read-collaborative&user-modify-playback-state'
+        }),
+    ],
 };
 
 /**
@@ -67,8 +59,8 @@ export const authOptions: NextAuthOptions = {
  * @see https://next-auth.js.org/configuration/nextjs
  */
 export const getServerAuthSession = (ctx: {
-  req: GetServerSidePropsContext["req"];
-  res: GetServerSidePropsContext["res"];
+    req: GetServerSidePropsContext["req"];
+    res: GetServerSidePropsContext["res"];
 }) => {
-  return getServerSession(ctx.req, ctx.res, authOptions);
+    return getServerSession(ctx.req, ctx.res, authOptions);
 };
