@@ -44,8 +44,8 @@ export const authOptions: NextAuthOptions = {
     },
     providers: [
         SpotifyProvider({
-            clientId: process.env.SPOTIFY_CLIENT_ID || '',
-            clientSecret: process.env.SPOTIFY_CLIENT_SECRET || '',
+            clientId: process.env.SPOTIFY_CLIENT_ID ?? '',
+            clientSecret: process.env.SPOTIFY_CLIENT_SECRET ?? '',
             authorization: 'https://accounts.spotify.com/authorize?scope=playlist-read-private,playlist-read-collaborative,user-modify-playback-state,user-read-playback-state'
         }),
     ],
